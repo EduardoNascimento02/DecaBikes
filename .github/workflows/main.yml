@@ -10,28 +10,36 @@ on:
       - "*.md"
       - "*.dockerignore"
 jobs:
-  githubactions-senai:
+setup-aws:
     runs-on: ubuntu-latest
     steps:
-      - name: Configurar AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: us-east-1
-      - name: sync-images
-        uses: actions/checkout@v3
+          region: us-east-1  # Update with your desired region
+
+  install-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+  sync-images:
+    runs-on: ubuntu-latest
+    needs: [setup-aws, install-dependencies]
+    steps:
+      - uses: actions/checkout@v3
       - name: Install awscli
         uses: aws-actions/aws-cli@v2
       - name: Run sync script
         run: |
           aws efs describe-file-systems | jq -r '.FileSystems[].LifeCycleState' | grep -q available
           if [[ $? -eq 0 ]]; then
-            sudo aws efs mount file-system-id:fs-0ffa25d8387046409 /efs
-            rsync -avz ./images/ /efs
-            sudo aws efs umount /efs
+            sudo aws efs mount file-system-id:EFS_FILE_SYSTEM_ID=$EFS_FILE_SYSTEM_ID /mnt/efs
+            rsync -avz ./images/ /mnt/efs/
+            sudo aws efs umount /mnt/efs
           else
             echo "EFS File System is not available. Skipping sync."
           fi
         env:
-          EFS_FILE_SYSTEM_ID: ${{ secrets.EFS_FILE_SYSTEM_ID }}
+          EFS_FILE_SYSTEM_ID: ${{ secrets.EFS_FILE_SYSTEM_ID }}  # Replace with your EFS ID
