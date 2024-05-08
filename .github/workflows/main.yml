@@ -13,13 +13,17 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Configurar AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y awscli
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set region us-east-1
+      - name: Checkout code
+      uses: actions/checkout@v2
+
+      - name: Configure AWS CLI
+        if: always()
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
 
       - name: Test AWS CLI
         if: always()
