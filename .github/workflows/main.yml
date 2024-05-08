@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS CLI
-        if: always()
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -22,21 +21,22 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
 
-      - name: Test aws cli
-        if: always()
+      - name: Test AWS CLI
         run: aws sts get-caller-identity
-      - uses: actions/checkout@v3
-      - name: Install awscli
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install AWS CLI
         uses: aws-actions/aws-cli@v2
+
       - name: Run sync script
         run: |
-          aws efs describe-file-systems | jq -r '.FileSystems[].LifeCycleState' | grep -q available
-          if [[ $? -eq 0 ]]; then
-            sudo aws efs mount file-system-id:EFS_FILE_SYSTEM_ID=$EFS_FILE_SYSTEM_ID /mnt/efs
-            rsync -avz ./images/ /mnt/efs/
-            sudo aws efs umount /mnt/efs
+          file_system_id=${{ secrets.EFS_FILE_SYSTEM_ID }}
+          if aws efs describe-file-systems --file-system-id $file_system_id | jq -r '.FileSystems[].LifeCycleState' | grep -q available; then
+            sudo aws efs mount --file-system-id $file_system_id:/ /mnt/efs
+            sudo rsync -avz ./images/ /mnt/efs/
+            sudo umount /mnt/efs
           else
             echo "EFS File System is not available. Skipping sync."
           fi
-        env:
-          EFS_FILE_SYSTEM_ID: ${{ secrets.EFS_FILE_SYSTEM_ID }}  # Replace with your EFS ID
