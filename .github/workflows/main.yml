@@ -13,10 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Instalar AWS CLI
-        if: always()
-        uses: aws-actions/aws-cli@v4
-
       - name: Configure AWS CLI
         if: always()
         uses: aws-actions/configure-aws-credentials@v4
@@ -29,14 +25,6 @@ jobs:
       - name: Test AWS CLI
         if: always()
         run: aws sts get-caller-identity
-
-      - name: Checkout code
-        if: always()
-        uses: actions/checkout@v3
-
-      - name: Install AWS CLI
-        if: always()
-        uses: aws-actions/aws-cli@v2
 
       - name: Run sync script
         if: always()
