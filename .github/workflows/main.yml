@@ -5,16 +5,17 @@ on:
     branches:
       - "develop"
     paths-ignore:
-      - "docs/**"
-      - "images/**"
-      - "*.md"
-      - "*.dockerignore"
+      - "*.txt"
 jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Instalar AWS CLI
+        if: always()
+        uses: aws-actions/aws-cli@v4
 
       - name: Configure AWS CLI
         if: always()
