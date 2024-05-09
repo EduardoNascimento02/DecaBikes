@@ -60,4 +60,3 @@ jobs:
             sudo cd /tmp/images
             sudo git clone https://github.com/EduardoNascimento02/DecaBikes.git
             sudo rsync -r /tmp/images/DecaBikes/images/ /efs/images/
-            sudo rm -r /tmp/images
