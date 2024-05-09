@@ -45,13 +45,13 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Deploy to instance
-        uses: appleboy/ssh-action@v1.0.3
+      - uses: actions/checkout@v3
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@7.0.1
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          script: |
-            sudo mkdir -p /efs/images
-            sudo rsync -avr ${{ github.repository.path }}/tree/develop/images /efs/images
+          switches: -avzr --delete
+          path: /images/
+          remote_path: efs/images/
+          remote_host: ${{ secrets.HOST }}
+          remote_user: ${{ secrets.USERNAME }}
+          remote_key: ${{ secrets.EC2_SSH_KEY }}
