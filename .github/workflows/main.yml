@@ -19,7 +19,7 @@ jobs:
           curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
           chmod +x ./snyk
           mv ./snyk /usr/local/bin/
-          sudo apt-get install git -y
+
           
 
       - name: Configure AWS CLI
@@ -54,8 +54,10 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
+            sudo apt-get install git -y
             sudo mkdir -p /efs/images
             sudo mkdir -p /tmp/images
+            echo whoami
             cd /tmp/images
             git clone https://github.com/EduardoNascimento02/DecaBikes.git
             sudo rsync -r /tmp/images/DecaBikes/images/ /efs/images/
