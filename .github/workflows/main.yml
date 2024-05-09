@@ -46,11 +46,12 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Deploy to instance
-        uses: actions/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          user: ec2-user
-          host: i-0b2375840883df0fa
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
           script: |
             sudo mkdir -p /efs/images
             sudo rsync -avz ${{ github.repository }}/images/ /efs/images
