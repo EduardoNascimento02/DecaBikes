@@ -13,6 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: INSTALL PACKAGES
+        run: |
+          sudo apt update -y
+          curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
+          chmod +x ./snyk
+          mv ./snyk /usr/local/bin/
+
       - name: Configure AWS CLI
         if: always()
         uses: aws-actions/configure-aws-credentials@v4
