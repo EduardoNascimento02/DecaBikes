@@ -57,3 +57,4 @@ jobs:
             sudo yum install git -y
             sudo git clone -b develop https://github.com/EduardoNascimento02/DecaBikes.git /tmp/
             sudo rsync -r /tmp/DecaBikes/images/ /efs/
+            sudo rm -rf /tmp/DecaBikes
