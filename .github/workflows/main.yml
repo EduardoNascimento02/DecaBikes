@@ -46,7 +46,8 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Imprimir o valor de github.repository
-        run: echo "O valor de github.repository é: ${{ github.repository }}"
+        run: |
+          echo "O valor de github.repository é: ${{ github.repository }}"
 
       - name: Deploy to instance
         uses: appleboy/ssh-action@v1.0.3
