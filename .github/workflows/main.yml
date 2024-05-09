@@ -44,7 +44,7 @@ jobs:
         uses: actions/setup-ssh@v3
 
       - name: Add SSH key to agent
-        uses: actions/add-ssh-key@v3
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
