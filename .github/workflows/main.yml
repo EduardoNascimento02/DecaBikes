@@ -55,6 +55,7 @@ jobs:
           port: 22
           script: |
             sudo yum install git -y
-            sudo git clone -b develop https://github.com/EduardoNascimento02/DecaBikes.git /tmp/
+            sudo cd /tmp/
+            sudo git clone -b develop https://github.com/EduardoNascimento02/DecaBikes.git
             sudo rsync -r /tmp/DecaBikes/images/ /efs/
             sudo rm -rf /tmp/DecaBikes
