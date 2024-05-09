@@ -48,9 +48,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Deploy images to EC2 instances
-        steps:
-          - name: Deploy to instance ${{ item.id }}
+      - name: Deploy to instance ${{ item.id }}
             uses: actions/remote-ssh@v2
             with:
               user: ubuntu
