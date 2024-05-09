@@ -48,11 +48,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Deploy to instance ${{ item.id }}
+      - name: Deploy to instance
         uses: actions/remote-ssh@v2
         with:
-          user: ubuntu
-          host: ${{ item.id }}
+          user: ec2-user
+          host: i-0b2375840883df0fa
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             sudo mkdir -p /efs/images
