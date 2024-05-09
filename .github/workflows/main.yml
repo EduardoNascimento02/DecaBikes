@@ -49,11 +49,11 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Deploy to instance ${{ item.id }}
-          uses: actions/remote-ssh@v2
-          with:
-            user: ubuntu
-            host: ${{ item.id }}
-            key: ${{ secrets.EC2_SSH_KEY }}
-            script: |
-              sudo mkdir -p /efs/images
-              sudo rsync -avz ${{ github.repository }}/images/ /efs/images
+        uses: actions/remote-ssh@v2
+        with:
+          user: ubuntu
+          host: ${{ item.id }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo mkdir -p /efs/images
+            sudo rsync -avz ${{ github.repository }}/images/ /efs/images
