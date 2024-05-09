@@ -25,15 +25,21 @@ jobs:
       - name: Test AWS CLI
         if: always()
         run: aws sts get-caller-identity
+      
+      - name: Snyk Auth
+        run: |
+          snyk -d auth $SNYK_TOKEN
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_AUTH_TOKEN }}
 
       - name: Run sync script
         if: always()
         run: |
           file_system_id=${{ secrets.EFS_FILE_SYSTEM_ID }}
           if aws efs describe-file-systems --file-system-id $file_system_id | jq -r '.FileSystems[].LifeCycleState' | grep -q available; then
-            sudo aws efs mount --file-system-id $file_system_id:/ /mnt/efs
-            sudo rsync -avz ./images/ /mnt/efs/
-            sudo umount /mnt/efs
+            sudo aws efs mount --file-system-id $file_system_id:/ /efs
+            sudo rsync -avz ./images/ /efs/
+            sudo umount /efs
           else
             echo "EFS File System is not available. Skipping sync."
           fi
