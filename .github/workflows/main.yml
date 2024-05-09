@@ -19,6 +19,7 @@ jobs:
           curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
           chmod +x ./snyk
           mv ./snyk /usr/local/bin/
+          
 
       - name: Configure AWS CLI
         if: always()
@@ -39,14 +40,22 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_AUTH_TOKEN }}
 
-      - name: Run sync script
-        if: always()
-        run: |
-          file_system_id=${{ secrets.EFS_FILE_SYSTEM_ID }}
-          if aws efs describe-file-systems --file-system-id $file_system_id | jq -r '.FileSystems[].LifeCycleState' | grep -q available; then
-            sudo aws efs mount --file-system-id $file_system_id:/ /efs
-            sudo rsync -avz ./images/ /efs/
-            sudo umount /efs
-          else
-            echo "EFS File System is not available. Skipping sync."
-          fi
+      - name: Install SSH agent
+        uses: actions/setup-ssh@v3
+
+      - name: Add SSH key to agent
+        uses: actions/add-ssh-key@v3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Deploy images to EC2 instances
+        steps:
+          - name: Deploy to instance ${{ item.id }}
+            uses: actions/remote-ssh@v2
+            with:
+              user: ubuntu
+              host: ${{ item.id }}
+              key: ${{ secrets.EC2_SSH_KEY }}
+              script: |
+                sudo mkdir -p /efs/images
+                sudo rsync -avz ${{ github.repository }}/images/ /efs/images
