@@ -54,4 +54,8 @@ jobs:
           port: 22
           script: |
             sudo mkdir -p /efs/images
-            sudo rsync -r https://github.com/EduardoNascimento02/DecaBikes/tree/develop/images/ /efs/images/
+            sudo mkdir -p /tmp/images
+            cd /tmp/images
+            git clone https://github.com/EduardoNascimento02/DecaBikes.git
+            sudo rsync -r /tmp/images/DecaBikes/images/ /efs/images/
+            sudo rm -r /tmp/images
