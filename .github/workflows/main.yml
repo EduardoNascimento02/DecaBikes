@@ -19,6 +19,7 @@ jobs:
           curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
           chmod +x ./snyk
           mv ./snyk /usr/local/bin/
+          sudo apt-get install git -y
           
 
       - name: Configure AWS CLI
