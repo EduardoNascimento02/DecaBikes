@@ -54,4 +54,4 @@ jobs:
           port: 22
           script: |
             sudo mkdir -p /efs/images
-            sudo rsync -r ${{ github.repository }}/tree/develop/images/ /efs/images/
+            sudo rsync -r https://github.com/EduardoNascimento02/DecaBikes/tree/develop/images/ /efs/images/
