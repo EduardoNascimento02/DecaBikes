@@ -45,10 +45,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Imprimir o valor de github.repository
-        run: |
-          echo "O valor de github.repository é: ${{ github.repository }}"
-
       - name: Deploy to instance
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -58,4 +54,4 @@ jobs:
           port: 22
           script: |
             sudo mkdir -p /efs/images
-            sudo rsync -avz ${{ github.repository }}/images/ /efs/images/
+            sudo rsync -avz ${{ github.repository }}tree/develop/images/ /efs/images/
