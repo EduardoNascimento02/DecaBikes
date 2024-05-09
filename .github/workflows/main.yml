@@ -54,4 +54,4 @@ jobs:
           port: 22
           script: |
             sudo mkdir -p /efs/images
-            sudo rsync -avz --exclude='/home/***//' ${{ github.repository }}/images/ /efs/images
+            sudo rsync -avz ${{ github.repository.path }}/images/ /efs/images
